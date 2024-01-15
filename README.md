@@ -1,8 +1,8 @@
-<center><h1>0x02. AirBnB clone - MySQL</h1></center>
+# 0x02. AirBnB clone - MySQL
 <h3>Background Context</h3>
 <p>Environment variables will be your best friend for this project!</p>
 
-<center> <h2>Usage</h2> </center>
+## Usage
 * First clone this repository.
 * Once the repository is cloned locate the "console.py" file
 * Run hbnb(interactively): `./console` and enter command
