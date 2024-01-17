@@ -137,6 +137,7 @@ class HBNBCommand(cmd.Cmd):
                 kwargs[key] = value
             if kwargs == {}:
                 new_instance = HBNBCommand.classes[arg_list[0]]()
+                storage.new(new_instance)
             else:
                 new_instance = HBNBCommand.classes[arg_list[0]](**kwargs)
             print(new_instance.id)
