@@ -115,32 +115,37 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, cmdline):
         """ Create an object of any class"""
-        if not cmdline:
+        try:
+            if not cmdline:
+                print("** class name missing **")
+                return
+            arg_list = cmdline.split(" ")
+            if arg_list[0] not in HBNBCommand.classes:
+                print("** class doesn't exist **")
+                return
+            kwargs = {}
+            for item in arg_list[1:]:
+                key, value = tuple(item.split("="))
+                if value[0] == '"':
+                    value = value.strip('"').replace('_', ' ')
+                    value = value.replace('"', r'\"')
+                else:
+                    try:
+                        value = eval(value)
+                    except (SyntaxError, NameError):
+                        continue
+                kwargs[key] = value
+            if kwargs == {}:
+                new_instance = HBNBCommand.classes[arg_list[0]]()
+            else:
+                new_instance = HBNBCommand.classes[arg_list[0]](**kwargs)
+                storage.new(new_instance)
+            print(new_instance.id)
+            storage.save()
+        except SyntaxError:
             print("** class name missing **")
-            return
-        arg_list = cmdline.split(" ")
-        if arg_list[0] not in HBNBCommand.classes:
+        except NameError:
             print("** class doesn't exist **")
-            return
-        kwargs = {}
-        for item in arg_list[1:]:
-              key, value = tuple(item.split("="))
-              if value[0] == '"':
-                  value = value.strip('"').replace('_', ' ')
-                  value = value.replace('"', r'\"')
-              else:
-                  try:
-                      value = eval(value)
-                  except (SyntaxError, NameError):
-                      continue
-              kwargs[key] = value
-        if kwargs == {}:
-            new_instance = HBNBCommand.classes[arg_list[0]]()
-        else:
-            new_instance = HBNBCommand.classes[arg_list[0]](**kwargs)
-            storage.new(new_instance)
-        print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
