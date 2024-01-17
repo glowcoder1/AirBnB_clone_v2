@@ -13,3 +13,4 @@ class User(BaseModel, Base):
     last_name = Column(String(128))
     email = Column(String(128), nullable=False)
     password = Column(String(128), nullable=False)
+    places = relationship("Place", backref="user", cascade="delete")
