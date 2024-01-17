@@ -139,7 +139,6 @@ class HBNBCommand(cmd.Cmd):
                 new_instance = HBNBCommand.classes[arg_list[0]]()
             else:
                 new_instance = HBNBCommand.classes[arg_list[0]](**kwargs)
-                storage.new(new_instance)
             print(new_instance.id)
             storage.save()
         except SyntaxError:
