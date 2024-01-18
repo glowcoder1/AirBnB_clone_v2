@@ -8,26 +8,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy import MetaData
 import models
 
-metadata = MetaData()
-
-"""
-Table defining the Many-to-Many relationship between
-places and amenities
-"""
-place_amenity = Table('place_amenity', metadata,
-                     Column('place_id', String(60),
-                            ForeignKey('places.id'),
-                            primary_key=True,
-                            nullable=False),
-                     Column('amenity_id', String(60),
-                            ForeignKey('amenities.id'),
-                            primary_key=True,
-                            nullable=False)
-                     )
-
-
 class Place(BaseModel, Base):
     """A place to stay"""
+
     if getenv("HBNB_TYPE_STORAGE") == "db":
         __tablename__ = "places"
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
@@ -73,4 +56,3 @@ class Place(BaseModel, Base):
                the attribute amenity_ids. Accepts only Amenity object."""
             if isinstance(amenity, Amenity):
                 self.amenity_ids.append(amenity.id)
-
