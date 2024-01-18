@@ -1,31 +1,14 @@
-import json
+#!/usr/bin/python3
+""" State Module for HBNB project """
+from models.base_model import BaseModel, Base
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
+from models.place import place_amenity
 
-class FileStorage:
-    """A class for managing file-based storage of objects."""
 
-    # Class variable to store the file path
-    __file_path = "your_file_path.json"
+class Amenity(BaseModel, Base):
+    """Amenity class to map to the amenities table"""
 
-    # Class variable to store the objects
-    __objects = {}
-
-    def save(self):
-        """
-        Save the storage dictionary to a JSON file.
-
-        This method serializes the stored objects to dictionaries,
-        updates a temporary dictionary, and writes the data to a JSON file.
-
-        Args:
-            None
-
-        Returns:
-            None
-        """
-        # Create a copy of the storage dictionary
-        serialized_objects = {key: value.to_dict() for key, value in self.__objects.items()}
-
-        # Write the serialized objects to the JSON file
-        with open(self.__file_path, "w") as file:
-            json.dump(serialized_objects, file)
-
+    __tablename__ = "amenities"
+    name = Column(String(128), nullable=False)
+    place_amenities = relationship("Place", secondary=place_amenity)
