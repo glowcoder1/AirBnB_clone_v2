@@ -11,6 +11,30 @@ from sqlalchemy import Float
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
+
+"""
+Table defining the relationship between
+places and amenities
+"""
+place_amenity = Table(
+    "place_amenity",
+    Base.metadata,
+    Column(
+        "place_id",
+        String(60),
+        ForeignKey("places.id"),
+        primary_key=True,
+        nullable=False,
+    ),
+    Column(
+        "amenity_id",
+        String(60),
+        ForeignKey("amenities.id"),
+        primary_key=True,
+        nullable=False,
+    ),
+)
+
 class Place(BaseModel, Base):
     """ A place to stay """
 
@@ -29,9 +53,47 @@ class Place(BaseModel, Base):
     reviews = relationship("Review", backref="place", cascade="delete")
 
 
-    if getenv("HBNB_TYPE_STORAGE", None) != "db":
+    if os.getenv("HBNB_TYPE_STORAGE") == "db":
+        reviews = relationship(
+            "Review", cascade="all, delete, delete-orphan", backref="place"
+        )
+
+        amenities = relationship(
+            "Amenity",
+            secondary=place_amenity,
+            viewonly=False,
+            back_populates="place_amenities",
+        )
+
+    else:
+
         @property
-        def reviews(self):
-            """Get r3eviews linked to a place"""
-            reviews = models.storage.all(Review)
-            return [review for review in reviews if review.place_id == self.id]
+        def reviews(self) -> list:
+            """Returns a list of Review instances that match self.id"""
+            from models import storage
+
+            all_objs = storage.all()
+            reviews_list = []
+            for key in all_objs.keys():
+                review = key.replace(".", " ")
+                review = shlex.split(review)
+                if review[0] == "Review":
+                    if all_objs[key].__dict__["place_id"] == self.id:
+                        reviews_list.append(all_objs[key])
+            return reviews_list
+
+        @property
+        def amenities(self) -> list:
+            """
+            Validates the object obj class and returns a list
+            of Amenity.id linked to Place
+            """
+            return self.amenity_ids
+
+        @amenities.setter
+        def amenities(self, obj=None):
+            from models.amenity import Amenity
+
+            if obj:
+                if type(obj) is Amenity and obj.id not in self.amenity_ids:
+                    self.amenity_ids.append(obj.id)
