@@ -35,12 +35,12 @@ def do_pack():
 
 def do_deploy(archive_path):
     """distributes an archive to web servers"""
-    if os.path.exists(archive_path) is False:
+    if os.path.isfile(archive_path) is False:
         return False
     try:
         archived_file = archive_path.split("/")[-1]
-        uncompressed = "/data/web_static/releases/{}".format(archive_path
-                                                             .split(".")[0])
+        no_ext = archived_file.split(".")[0]
+        uncompressed = "/data/web_static/releases/{}".format(no_ext)
         archived_file = "/tmp/{}".format(archived_file)
 
         put(archive_path, "/tmp/")
@@ -51,9 +51,8 @@ def do_deploy(archive_path):
                                                 uncompressed))
         run("sudo rm -rf {}/web_static".format(uncompressed))
         run("sudo rm -rf /data/web_static/current")
-        run("sudo ln -s {} /data/web_static/current".format(uncompressed))
+        run("sudo ln -s {}/ /data/web_static/current".format(uncompressed))
 
-        print("New version deployed!")
         return True
     except Exception:
         return False
