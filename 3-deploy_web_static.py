@@ -10,6 +10,9 @@ from datetime import datetime
 from fabric.api import local, run, put, env
 
 
+env.hosts = ["35.196.46.172"]
+
+
 def do_pack():
     """Archives the static files and returns path if successful."""
     local("mkdir -p versions")
