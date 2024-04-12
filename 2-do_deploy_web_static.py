@@ -31,9 +31,12 @@ def do_pack():
 
 def do_deploy(archive_path):
     """distributes an archive to web servers"""
-    if os.path.exists(archive_path):
-        archived_file = archive_path[9:]
-        uncompressed = "/data/web_static/releases/{}".format(archive_path[:-4])
+    if os.path.exists(archive_path) is False:
+        return False
+    try:
+        archived_file = archive_path.split("/")[-1]
+        uncompressed = "/data/web_static/releases/{}".format(archive_path
+                                                             .split(".")[0])
         archived_file = "/tmp/{}".format(archived_file)
 
         put(archive_path, "/tmp/")
@@ -48,6 +51,5 @@ def do_deploy(archive_path):
 
         print("New version deployed!")
         return True
-
-    else:
+    except:
         return False
