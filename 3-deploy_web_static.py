@@ -51,13 +51,13 @@ def do_deploy(archive_path):
 
         print("New version deployed!")
         return True
-    except:
+    except Exception:
         return False
 
 
 def deploy():
     """creates and distributes an archive to your web servers"""
-    archive_path =  do_pack()
+    archive_path = do_pack()
     if archive_path is None:
         return False
     return do_deploy(archive_path)
