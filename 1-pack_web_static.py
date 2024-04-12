@@ -29,5 +29,5 @@ def do_pack():
         size = os.stat(curr_version).st_size
         print("web_static packed: {} -> {} Bytes".format(curr_version, size))
     except Exception:
-        output = None
+        curr_version = None
     return curr_version
