@@ -44,14 +44,14 @@ def do_deploy(archive_path):
         archived_file = "/tmp/{}".format(archived_file)
 
         put(archive_path, "/tmp/")
-        run("sudo mkdir -p {}".format(uncompressed))
-        run("sudo tar -xzf {} -C {}/".format(archived_file, uncompressed))
-        run("sudo rm {}".format(archived_file))
-        run("sudo mv {}/web_static/* {}".format(uncompressed,
+        run("mkdir -p {}".format(uncompressed))
+        run("tar -xzf {} -C {}/".format(archived_file, uncompressed))
+        run("rm {}".format(archived_file))
+        run("mv {}/web_static/* {}".format(uncompressed,
                                                 uncompressed))
-        run("sudo rm -rf {}/web_static".format(uncompressed))
-        run("sudo rm -rf /data/web_static/current")
-        run("sudo ln -s {}/ /data/web_static/current".format(uncompressed))
+        run("rm -rf {}/web_static".format(uncompressed))
+        run("rm -rf /data/web_static/current")
+        run("ln -s {}/ /data/web_static/current".format(uncompressed))
 
         return True
     except Exception:
